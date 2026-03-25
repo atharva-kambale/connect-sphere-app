@@ -26,5 +26,3 @@ services:
         sync: false
       - key: ADMIN_EMAIL
         sync: false
-      - key: RESEND_AUDIENCE_ID
-        sync: false
