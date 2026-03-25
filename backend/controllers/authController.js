@@ -2,6 +2,7 @@ const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
+const { welcomeEmailTemplate, otpEmailTemplate, passwordResetEmailTemplate } = require('../utils/emailTemplates');
 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -22,14 +23,7 @@ const registerUser = async (req, res) => {
       await sendEmail({
         email: user.email,
         subject: 'Connect Sphere - Verify Your Email',
-        message: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px;">
-          <h2 style="color:#3b82f6;text-align:center;">Welcome to Connect Sphere!</h2>
-          <p style="color:#374151;text-align:center;">Your verification code is:</p>
-          <div style="background:#f1f5f9;border-radius:12px;padding:20px;text-align:center;margin:20px 0;">
-            <span style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#1e40af;">${otp}</span>
-          </div>
-          <p style="color:#6b7280;text-align:center;font-size:14px;">This code expires in 10 minutes.</p>
-        </div>`
+        message: otpEmailTemplate(otp)
       });
       res.status(201).json({ message: 'User registered. Check email for OTP.', userId: user._id });
     } catch (error) {
@@ -60,6 +54,17 @@ const verifyOTP = async (req, res) => {
     user.otpExpire = undefined;
     await user.save();
 
+    // Send Welcome Email
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Welcome to Connect Sphere!',
+        message: welcomeEmailTemplate(user.name)
+      });
+    } catch (err) {
+      console.warn('Welcome email could not be sent', err);
+    }
+
     res.json({
       _id: user.id,
       name: user.name,
@@ -89,13 +94,7 @@ const resendOTP = async (req, res) => {
     await sendEmail({
       email: user.email,
       subject: 'Connect Sphere - New Verification OTP',
-      message: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px;">
-        <h2 style="color:#3b82f6;text-align:center;">New OTP Code</h2>
-        <div style="background:#f1f5f9;border-radius:12px;padding:20px;text-align:center;margin:20px 0;">
-          <span style="font-size:32px;font-weight:bold;letter-spacing:8px;color:#1e40af;">${otp}</span>
-        </div>
-        <p style="color:#6b7280;text-align:center;font-size:14px;">This code expires in 10 minutes.</p>
-      </div>`
+      message: otpEmailTemplate(otp)
     });
 
     res.json({ message: 'OTP successfully resent to your inbox' });
@@ -148,16 +147,7 @@ const forgotPassword = async (req, res) => {
     await sendEmail({
       email: user.email,
       subject: 'Connect Sphere - Password Reset',
-      message: `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;padding:32px;border:1px solid #e5e7eb;border-radius:16px;">
-        <h2 style="color:#3b82f6;text-align:center;">Password Reset</h2>
-        <p style="color:#374151;text-align:center;">Click the button below to reset your password. This link expires in <strong>30 minutes</strong>.</p>
-        <div style="text-align:center;margin:28px 0;">
-          <a href="${resetUrl}" style="display:inline-block;background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;text-decoration:none;padding:14px 32px;border-radius:9999px;font-weight:700;font-size:16px;">Reset My Password</a>
-        </div>
-        <p style="color:#6b7280;text-align:center;font-size:13px;">If the button doesn't work, copy this link:</p>
-        <p style="text-align:center;font-size:12px;word-break:break-all;color:#6366f1;">${resetUrl}</p>
-        <p style="color:#9ca3af;text-align:center;font-size:12px;margin-top:20px;">If you didn't request this, you can safely ignore this email.</p>
-      </div>`
+      message: passwordResetEmailTemplate(resetUrl)
     });
 
     res.json({ message: 'Password reset email sent' });

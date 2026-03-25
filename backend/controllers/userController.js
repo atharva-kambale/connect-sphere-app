@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const Listing = require('../models/Listing');
+const sendEmail = require('../utils/sendEmail');
+const { contactFormEmailTemplate, newsletterSignupTemplate } = require('../utils/emailTemplates');
 
 // @desc    Get logged-in user's profile
 // @route   GET /api/users/profile
@@ -62,4 +64,44 @@ const getPublicProfile = async (req, res) => {
   }
 };
 
-module.exports = { getUserProfile, updateUserProfile, getPublicProfile };
+// @desc    Submit contact form and email admin
+// @route   POST /api/users/contact
+const submitContactForm = async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) return res.status(400).json({ message: 'All fields are required' });
+
+    await sendEmail({
+      email: process.env.EMAIL_FROM || 'admin@connectsphere.tech',
+      subject: `New Contact Form Submission from ${name}`,
+      message: contactFormEmailTemplate(name, email, message)
+    });
+
+    res.json({ message: 'Message sent successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Subscribe to newsletter
+// @route   POST /api/users/subscribe
+const subscribeNewsletter = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email is required' });
+
+    // Assuming we just send a success confirmation for now.
+    // Real implementation would save to DB/Resend Audience.
+    await sendEmail({
+      email,
+      subject: 'Welcome to Connect Sphere Updates!',
+      message: newsletterSignupTemplate()
+    });
+
+    res.json({ message: 'Subscribed successfully.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getUserProfile, updateUserProfile, getPublicProfile, submitContactForm, subscribeNewsletter };

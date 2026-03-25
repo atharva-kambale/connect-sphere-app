@@ -32,6 +32,8 @@ export const updateListingStatus = (id, status) => API.put(`/listings/${id}/stat
 export const getUserProfile = () => API.get('/users/profile');
 export const updateUserProfile = (data) => API.put('/users/profile', data);
 export const getPublicProfile = (id) => API.get(`/users/${id}`);
+export const sendContactMessage = (data) => API.post('/users/contact', data);
+export const subscribeNewsletter = (data) => API.post('/users/subscribe', data);
 
 // Chat (legacy)
 export const getInbox = () => API.get('/chat');

@@ -28,7 +28,7 @@ const sendEmail = async (options) => {
       if (process.env.NODE_ENV === 'production') {
         throw new Error('Email delivery failed.');
       }
-      console.warn('⚠️  Email delivery failed (Resend free tier only sends to account owner email). Use the console output above to test.');
+      console.warn('⚠️  Email delivery failed via Resend API. Use the console output above to test.');
       return;
     }
     

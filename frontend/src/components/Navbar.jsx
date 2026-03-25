@@ -115,14 +115,21 @@ const Navbar = () => {
                 fontWeight: 900,
                 flexShrink: 0,
                 textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              <img src="/favicon.svg" alt="Logo" style={{ width: '30px', height: '30px', filter: 'drop-shadow(0 0 8px rgba(96,165,250,0.6))' }} />
+              <span style={{
                 background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 filter: 'drop-shadow(0 0 10px rgba(96,165,250,0.4))',
                 letterSpacing: '-0.02em',
-              }}
-            >
-              Connect Sphere
+              }}>
+                Connect Sphere
+              </span>
             </Link>
 
             {/* Desktop Nav — right aligned */}

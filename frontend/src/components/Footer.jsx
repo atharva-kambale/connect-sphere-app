@@ -1,12 +1,31 @@
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FiGithub, FiMail, FiArrowRight, FiAlertTriangle } from 'react-icons/fi';
+import { FiGithub, FiMail, FiArrowRight, FiAlertTriangle, FiSend } from 'react-icons/fi';
+import * as api from '../services/api';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+  const [subscribeState, setSubscribeState] = useState('idle'); // idle | loading | success | error
   const year = new Date().getFullYear();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { pathname } = useLocation();
   const showCTA = !isAuthenticated && pathname !== '/';
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email) return;
+    setSubscribeState('loading');
+    try {
+      await api.subscribeNewsletter({ email });
+      setSubscribeState('success');
+      setEmail('');
+      setTimeout(() => setSubscribeState('idle'), 5000);
+    } catch (err) {
+      setSubscribeState('error');
+      setTimeout(() => setSubscribeState('idle'), 3000);
+    }
+  };
 
   return (
     <footer style={{ background: 'linear-gradient(180deg, #0a0f1e 0%, #060b16 100%)', position: 'relative', overflow: 'hidden' }}>
@@ -65,14 +84,20 @@ const Footer = () => {
             <Link
               to="/"
               style={{
-                display: 'inline-block',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
                 fontSize: '1.6rem', fontWeight: 900, marginBottom: '12px',
-                background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                 textDecoration: 'none',
               }}
             >
-              Connect Sphere
+              <img src="/favicon.svg" alt="Logo" style={{ width: '28px', height: '28px', filter: 'drop-shadow(0 0 6px rgba(96,165,250,0.5))' }} />
+              <span style={{
+                background: 'linear-gradient(135deg, #60a5fa, #a78bfa)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>
+                Connect Sphere
+              </span>
             </Link>
             <p style={{ color: 'rgba(148,163,184,0.65)', lineHeight: 1.7, maxWidth: '320px', fontSize: '0.9rem' }}>
               A student-built academic project demonstrating a peer-to-peer campus marketplace. Not a commercial service.
@@ -163,6 +188,58 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
+
+            {/* Newsletter Subscription */}
+            <div style={{ marginTop: '32px' }}>
+              <h4 style={{ color: '#e2e8f0', fontWeight: 700, marginBottom: '12px', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                Join Newsletter
+              </h4>
+              <p style={{ color: 'rgba(148,163,184,0.7)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                Get the latest broadcast updates.
+              </p>
+              <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '8px' }}>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={subscribeState === 'loading' || subscribeState === 'success'}
+                  style={{
+                    flex: 1,
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    color: '#f8fafc',
+                    fontSize: '0.875rem',
+                    outline: 'none',
+                    minWidth: 0, 
+                  }}
+                />
+                <button
+                  type="submit"
+                  disabled={subscribeState === 'loading' || subscribeState === 'success'}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    background: subscribeState === 'success' ? '#10b981' : 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                    color: 'white',
+                    border: 'none',
+                    cursor: subscribeState === 'loading' || subscribeState === 'success' ? 'not-allowed' : 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  {subscribeState === 'loading' ? '...' : subscribeState === 'success' ? '✓' : <FiSend size={14} />}
+                </button>
+              </form>
+              {subscribeState === 'success' && (
+                <p style={{ color: '#34d399', fontSize: '0.75rem', marginTop: '8px', margin: 0 }}>Subscribed successfully!</p>
+              )}
+              {subscribeState === 'error' && (
+                <p style={{ color: '#f87171', fontSize: '0.75rem', marginTop: '8px', margin: 0 }}>Failed to subscribe.</p>
+              )}
+            </div>
           </div>
         </div>
 

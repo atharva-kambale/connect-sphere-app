@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiMapPin, FiSend, FiMessageCircle } from 'react-icons/fi';
+import * as api from '../services/api';
 
 const inputStyle = {
   width: '100%',
@@ -17,10 +18,22 @@ const inputStyle = {
 
 const ContactPage = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-  const handleSubmit = (e) => { e.preventDefault(); setSent(true); };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    try {
+      await api.sendContactMessage(form);
+      setStatus('success');
+      setForm({ name: '', email: '', message: '' });
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+    }
+  };
 
   return (
     <div style={{ background: '#0a0f1e', minHeight: '100vh' }}>
@@ -71,8 +84,8 @@ const ContactPage = () => {
             <h2 style={{ fontSize: 'clamp(1.3rem,3.5vw,1.6rem)', fontWeight: 800, color: '#e2e8f0', marginBottom: '24px' }}>Contact Information</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {[
-                { icon: FiMail, title: 'Email', value: 'support@connectsphere.edu', color: '#60a5fa' },
-                { icon: FiMapPin, title: 'Location', value: 'Your University Campus', color: '#a78bfa' },
+                { icon: FiMail, title: 'Email (Resend Target)', value: 'support@connectsphere.tech', link: 'mailto:support@connectsphere.tech', color: '#60a5fa' },
+                { icon: FiMapPin, title: 'Location', value: 'Your University Campus', link: 'https://maps.google.com/?q=University+Campus', color: '#a78bfa' },
                 { icon: FiMessageCircle, title: 'Response Time', value: 'Within 24 hours', color: '#34d399' },
               ].map((item) => (
                 <div key={item.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
@@ -81,7 +94,13 @@ const ContactPage = () => {
                   </div>
                   <div>
                     <p style={{ fontWeight: 700, color: '#e2e8f0', margin: 0, fontSize: '0.95rem' }}>{item.title}</p>
-                    <p style={{ color: 'rgba(148,163,184,0.7)', margin: '4px 0 0', fontSize: '0.875rem' }}>{item.value}</p>
+                    {item.link ? (
+                      <a href={item.link} target={item.link.startsWith('http') ? '_blank' : '_self'} rel="noreferrer" style={{ color: 'rgba(148,163,184,0.7)', margin: '4px 0 0', fontSize: '0.875rem', textDecoration: 'none', display: 'block', transition: 'color 0.2s' }} onMouseEnter={e => e.currentTarget.style.color = '#60a5fa'} onMouseLeave={e => e.currentTarget.style.color = 'rgba(148,163,184,0.7)'}>
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p style={{ color: 'rgba(148,163,184,0.7)', margin: '4px 0 0', fontSize: '0.875rem' }}>{item.value}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -90,11 +109,17 @@ const ContactPage = () => {
 
           {/* Right - Form */}
           <div style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '24px', padding: 'clamp(24px,4vw,36px)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)' }}>
-            {sent ? (
+            {status === 'success' ? (
               <div style={{ textAlign: 'center', padding: 'clamp(24px,5vw,40px) 0' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '16px' }}>✅</div>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '8px' }}>Message Sent!</h3>
                 <p style={{ color: 'rgba(148,163,184,0.75)' }}>We'll get back to you within 24 hours.</p>
+                <button 
+                  onClick={() => setStatus('idle')} 
+                  style={{ marginTop: '24px', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: 'white', padding: '8px 16px', borderRadius: '8px', cursor: 'pointer' }}
+                >
+                  Send another message
+                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -121,20 +146,25 @@ const ContactPage = () => {
                 />
                 <button
                   type="submit"
+                  disabled={status === 'loading'}
                   style={{
                     width: '100%', padding: '14px', borderRadius: '12px',
                     background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
                     color: 'white', fontWeight: 700, fontSize: '0.95rem',
-                    border: 'none', cursor: 'pointer',
+                    border: 'none', cursor: status === 'loading' ? 'not-allowed' : 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                     boxShadow: '0 8px 24px rgba(99,102,241,0.35)',
                     transition: 'all 0.2s',
+                    opacity: status === 'loading' ? 0.7 : 1,
                   }}
-                  onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
-                  onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+                  onMouseEnter={e => { if (status !== 'loading') e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                  onMouseLeave={e => { if (status !== 'loading') e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
-                  <FiSend size={16} /> Send Message
+                  {status === 'loading' ? 'Sending...' : <><FiSend size={16} /> Send Message</>}
                 </button>
+                {status === 'error' && (
+                  <p style={{ color: '#f87171', fontSize: '0.85rem', textAlign: 'center', margin: 0 }}>Failed to send message. Please try again.</p>
+                )}
               </form>
             )}
           </div>
