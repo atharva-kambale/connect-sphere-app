@@ -1,11 +1,13 @@
 <p align="center">
   <h1 align="center">🌐 Connect Sphere</h1>
   <p align="center">
-    A modern, full-stack campus marketplace where university students can buy, sell, and connect.
+    A full-stack campus marketplace demo — built as a <strong>university student academic project</strong>.
     <br />
     <strong>Built with React · Express · MongoDB · Socket.io</strong>
   </p>
 </p>
+
+> **⚠️ DISCLAIMER:** This is a **non-commercial student project** created for educational and portfolio purposes only. It is NOT a registered business, startup, or real commercial service. No real financial transactions are processed. The name "Connect Sphere" is a project title only and is not a registered trademark. See [DISCLAIMER.md](./DISCLAIMER.md) for full details.
 
 ---
 
@@ -145,8 +147,12 @@ Contributions are welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for 
 
 This project is licensed under the MIT License — see [LICENSE](./LICENSE) for details.
 
+## ⚠️ Disclaimer
+
+This is a **student academic project** for educational purposes only. It is not a commercial product, registered business, or production service. See [DISCLAIMER.md](./DISCLAIMER.md) for the complete legal disclaimer.
+
 ---
 
 <p align="center">
-  Made with ❤️ for campus communities everywhere
+  🎓 University Student Academic Project — Not a commercial service
 </p>

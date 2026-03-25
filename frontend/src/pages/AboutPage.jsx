@@ -51,7 +51,7 @@ const AboutPage = () => {
             transition={{ delay: 0.2 }}
             style={{ fontSize: 'clamp(0.95rem,2.5vw,1.15rem)', color: 'rgba(203,213,225,0.82)', lineHeight: 1.7, maxWidth: '640px', margin: '0 auto' }}
           >
-            We're building the most trusted peer-to-peer marketplace exclusively for university communities. Because students deserve a platform built for them.
+            We built Connect Sphere as a university student project to explore and demonstrate modern full-stack web development. This is an academic project, not a commercial service.
           </motion.p>
         </div>
       </section>
@@ -61,10 +61,10 @@ const AboutPage = () => {
         <div style={{ maxWidth: '1100px', margin: '0 auto', padding: 'clamp(24px,5vw,40px) clamp(16px,4vw,24px)' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'clamp(16px,4vw,24px)' }} className="stats-grid">
             {[
-              { value: '10K+', label: 'Students', emoji: '🎓' },
-              { value: '50+', label: 'Universities', emoji: '🏫' },
-              { value: '25K+', label: 'Listings', emoji: '📦' },
-              { value: '98%', label: 'Happy Users', emoji: '😊' },
+              { value: '14+', label: 'Pages', emoji: '📚' },
+              { value: '6', label: 'Models', emoji: '🗃️' },
+              { value: '9', label: 'API Routes', emoji: '🔌' },
+              { value: 'Live', label: 'Deployed', emoji: '🚀' },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
@@ -89,11 +89,16 @@ const AboutPage = () => {
           <div>
             <h2 style={{ fontSize: 'clamp(1.6rem,4vw,2rem)', fontWeight: 900, color: '#e2e8f0', marginBottom: '20px' }}>Our Mission</h2>
             <p style={{ color: 'rgba(148,163,184,0.8)', lineHeight: 1.8, marginBottom: '16px', fontSize: 'clamp(0.9rem,2.5vw,1rem)' }}>
-              Connect Sphere was born from a simple idea: university students need a safe, dedicated space to buy, sell, and trade academic resources and personal items within their campus community.
+              Connect Sphere was built as a university academic project to demonstrate full-stack web development skills, including React, Node.js, MongoDB, Socket.io, and cloud deployment.
             </p>
-            <p style={{ color: 'rgba(148,163,184,0.8)', lineHeight: 1.8, fontSize: 'clamp(0.9rem,2.5vw,1rem)' }}>
-              We verify every user through their institutional email, creating a trusted environment where students can transact with confidence — no anonymous strangers, just verified peers.
+            <p style={{ color: 'rgba(148,163,184,0.8)', lineHeight: 1.8, marginBottom: '16px', fontSize: 'clamp(0.9rem,2.5vw,1rem)' }}>
+              It simulates a campus marketplace where students can list items, chat in real time, and manage their profiles — all for learning purposes.
             </p>
+            <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: '12px', padding: '14px 18px', marginTop: '8px' }}>
+              <p style={{ color: '#fbbf24', fontSize: '0.85rem', lineHeight: 1.6 }}>
+                ⚠️ <strong>Disclaimer:</strong> This is a student project for educational purposes only. It is not a registered business, does not process real transactions, and makes no trademark claims.
+              </p>
+            </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(12px,3vw,16px)' }}>
             {[

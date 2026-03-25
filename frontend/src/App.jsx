@@ -22,6 +22,7 @@ import SettingsPage from './pages/SettingsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import DisclaimerPage from './pages/DisclaimerPage';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -52,6 +53,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/disclaimer" element={<DisclaimerPage />} />
 
             {/* Protected Routes */}
             <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />

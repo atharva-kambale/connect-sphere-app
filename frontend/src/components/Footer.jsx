@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FiGithub, FiTwitter, FiMail, FiInstagram, FiArrowRight } from 'react-icons/fi';
+import { FiGithub, FiMail, FiArrowRight, FiAlertTriangle } from 'react-icons/fi';
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -75,14 +75,12 @@ const Footer = () => {
               Connect Sphere
             </Link>
             <p style={{ color: 'rgba(148,163,184,0.65)', lineHeight: 1.7, maxWidth: '320px', fontSize: '0.9rem' }}>
-              The trusted peer-to-peer marketplace built exclusively for university communities. Verified students, real campus deals.
+              A student-built academic project demonstrating a peer-to-peer campus marketplace. Not a commercial service.
             </p>
             {/* Social icons */}
             <div className="flex gap-3 mt-6">
               {[
-                { icon: FiGithub, href: '#', label: 'GitHub' },
-                { icon: FiTwitter, href: '#', label: 'Twitter' },
-                { icon: FiInstagram, href: '#', label: 'Instagram' },
+                { icon: FiGithub, href: 'https://github.com/atharva-kambale/connect-sphere-app', label: 'GitHub' },
                 { icon: FiMail, href: '#', label: 'Email' },
               ].map(({ icon: Icon, href, label }) => (
                 <a
@@ -147,16 +145,21 @@ const Footer = () => {
               Legal
             </h4>
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {['Privacy Policy', 'Terms of Service', 'Cookie Policy', 'Community Guidelines'].map(label => (
+              {[
+                { to: '/disclaimer', label: 'Disclaimer & Legal' },
+                { to: '/disclaimer', label: 'Terms of Use' },
+                { to: '/disclaimer', label: 'Privacy Notice' },
+                { to: '/about', label: 'About This Project' },
+              ].map(({ to, label }) => (
                 <li key={label}>
-                  <a
-                    href="#"
+                  <Link
+                    to={to}
                     style={{ color: 'rgba(148,163,184,0.7)', textDecoration: 'none', fontSize: '0.9rem', transition: 'color 0.2s' }}
                     onMouseEnter={e => e.currentTarget.style.color = '#60a5fa'}
                     onMouseLeave={e => e.currentTarget.style.color = 'rgba(148,163,184,0.7)'}
                   >
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -180,8 +183,24 @@ const Footer = () => {
             </span>
           </div>
           <p style={{ color: 'rgba(100,116,139,0.7)', fontSize: '0.8rem', textAlign: 'center' }}>
-            © {year} Connect Sphere. All rights reserved. Made with ❤️ for students.
+            © {year} Connect Sphere — Academic Student Project. Not a commercial service.
           </p>
+          <div style={{
+            marginTop: '12px',
+            padding: '10px 16px',
+            background: 'rgba(245,158,11,0.08)',
+            border: '1px solid rgba(245,158,11,0.15)',
+            borderRadius: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+          }}>
+            <FiAlertTriangle size={14} style={{ color: '#fbbf24', flexShrink: 0 }} />
+            <p style={{ color: 'rgba(251,191,36,0.8)', fontSize: '0.72rem', textAlign: 'center', lineHeight: 1.5 }}>
+              This is a university student project for educational purposes only. No real transactions are processed. <Link to="/disclaimer" style={{ color: '#fbbf24', textDecoration: 'underline' }}>Read full disclaimer</Link>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
