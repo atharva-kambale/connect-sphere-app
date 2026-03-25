@@ -24,8 +24,7 @@ const validateRegister = [
   body('email')
     .trim()
     .notEmpty().withMessage('Email is required')
-    .isEmail().withMessage('Please provide a valid email')
-    .normalizeEmail(),
+    .isEmail().withMessage('Please provide a valid email'),
   body('password')
     .notEmpty().withMessage('Password is required')
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
@@ -45,8 +44,7 @@ const validateLogin = [
   body('email')
     .trim()
     .notEmpty().withMessage('Email is required')
-    .isEmail().withMessage('Please provide a valid email')
-    .normalizeEmail(),
+    .isEmail().withMessage('Please provide a valid email'),
   body('password')
     .notEmpty().withMessage('Password is required'),
   handleValidationErrors,
@@ -67,8 +65,7 @@ const validateOTP = [
   body('email')
     .trim()
     .notEmpty().withMessage('Email is required')
-    .isEmail().withMessage('Please provide a valid email')
-    .normalizeEmail(),
+    .isEmail().withMessage('Please provide a valid email'),
   body('otp')
     .trim()
     .notEmpty().withMessage('OTP is required')
