@@ -22,3 +22,7 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false

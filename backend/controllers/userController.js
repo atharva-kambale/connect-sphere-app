@@ -71,8 +71,10 @@ const submitContactForm = async (req, res) => {
     const { name, email, message } = req.body;
     if (!name || !email || !message) return res.status(400).json({ message: 'All fields are required' });
 
+    // Send to ADMIN_EMAIL (the owner's personal inbox), NOT EMAIL_FROM (the Resend sender)
+    const adminEmail = process.env.ADMIN_EMAIL || 'atharvakambale33@gmail.com';
     await sendEmail({
-      email: process.env.EMAIL_FROM || 'admin@connectsphere.tech',
+      email: adminEmail,
       subject: `New Contact Form Submission from ${name}`,
       message: contactFormEmailTemplate(name, email, message)
     });

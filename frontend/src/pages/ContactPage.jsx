@@ -84,7 +84,7 @@ const ContactPage = () => {
             <h2 style={{ fontSize: 'clamp(1.3rem,3.5vw,1.6rem)', fontWeight: 800, color: '#e2e8f0', marginBottom: '24px' }}>Contact Information</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {[
-                { icon: FiMail, title: 'Email (Resend Target)', value: 'support@connectsphere.tech', link: 'mailto:support@connectsphere.tech', color: '#60a5fa' },
+                { icon: FiMail, title: 'Email', value: 'admin@connectsphere.tech', link: 'mailto:admin@connectsphere.tech', color: '#60a5fa' },
                 { icon: FiMapPin, title: 'Location', value: 'Your University Campus', link: 'https://maps.google.com/?q=University+Campus', color: '#a78bfa' },
                 { icon: FiMessageCircle, title: 'Response Time', value: 'Within 24 hours', color: '#34d399' },
               ].map((item) => (
