@@ -1,7 +1,10 @@
 const User = require('../models/User');
 const Listing = require('../models/Listing');
 const sendEmail = require('../utils/sendEmail');
+const { Resend } = require('resend');
 const { contactFormEmailTemplate, newsletterSignupTemplate } = require('../utils/emailTemplates');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // @desc    Get logged-in user's profile
 // @route   GET /api/users/profile
@@ -85,25 +88,52 @@ const submitContactForm = async (req, res) => {
   }
 };
 
-// @desc    Subscribe to newsletter
+// @desc    Subscribe to newsletter — adds contact to Resend Audience for broadcasts
 // @route   POST /api/users/subscribe
 const subscribeNewsletter = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, firstName, lastName } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required' });
 
-    // Assuming we just send a success confirmation for now.
-    // Real implementation would save to DB/Resend Audience.
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
+
+    if (audienceId) {
+      // Add the contact to the Resend Audience for broadcasts
+      const { data, error } = await resend.contacts.create({
+        email,
+        firstName: firstName || '',
+        lastName: lastName || '',
+        unsubscribed: false,
+        audienceId,
+      });
+
+      if (error) {
+        console.error('Resend Contacts API Error:', error);
+        // If error is "contact already exists", treat as success
+        if (error.message && error.message.includes('already exists')) {
+          return res.json({ message: 'You are already subscribed!' });
+        }
+        return res.status(500).json({ message: 'Failed to subscribe. Please try again.' });
+      }
+
+      console.log('✅ Contact added to Resend Audience:', data);
+    } else {
+      console.warn('⚠️  RESEND_AUDIENCE_ID not set. Skipping Audience registration.');
+    }
+
+    // Send a beautiful confirmation email
     await sendEmail({
       email,
       subject: 'Welcome to Connect Sphere Updates!',
       message: newsletterSignupTemplate()
     });
 
-    res.json({ message: 'Subscribed successfully.' });
+    res.json({ message: 'Subscribed successfully!' });
   } catch (error) {
+    console.error('Subscribe error:', error);
     res.status(500).json({ message: error.message });
   }
 };
 
 module.exports = { getUserProfile, updateUserProfile, getPublicProfile, submitContactForm, subscribeNewsletter };
+
