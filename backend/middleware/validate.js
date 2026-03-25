@@ -28,9 +28,7 @@ const validateRegister = [
     .normalizeEmail(),
   body('password')
     .notEmpty().withMessage('Password is required')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
-    .matches(/[a-zA-Z]/).withMessage('Password must contain at least one letter')
-    .matches(/[0-9]/).withMessage('Password must contain at least one number'),
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
   body('university')
     .optional()
     .trim()
@@ -60,9 +58,7 @@ const validateResetPassword = [
     .notEmpty().withMessage('Reset token is required'),
   body('password')
     .notEmpty().withMessage('Password is required')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
-    .matches(/[a-zA-Z]/).withMessage('Password must contain at least one letter')
-    .matches(/[0-9]/).withMessage('Password must contain at least one number'),
+    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
   handleValidationErrors,
 ];
 

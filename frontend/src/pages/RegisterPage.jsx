@@ -64,7 +64,12 @@ const RegisterPage = () => {
       await api.register(form);
       navigate('/verify-otp', { state: { email: form.email } });
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      const data = err.response?.data;
+      if (data?.errors?.length) {
+        setError(data.errors.map(e => e.message).join('. '));
+      } else {
+        setError(data?.message || 'Registration failed');
+      }
     } finally {
       setLoading(false);
     }
