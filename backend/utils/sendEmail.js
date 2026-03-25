@@ -16,7 +16,7 @@ const sendEmail = async (options) => {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Connect Sphere <onboarding@resend.dev>',
+      from: process.env.EMAIL_FROM || 'Connect Sphere <noreply@connectsphere.tech>',
       to: options.email,
       subject: options.subject,
       html: options.message,
