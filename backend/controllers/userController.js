@@ -95,30 +95,26 @@ const subscribeNewsletter = async (req, res) => {
     const { email, firstName, lastName } = req.body;
     if (!email) return res.status(400).json({ message: 'Email is required' });
 
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
-
-    if (audienceId) {
-      // Add the contact to the Resend Audience for broadcasts
+    // Add the contact to the Resend default Audience for broadcasts
+    try {
       const { data, error } = await resend.contacts.create({
         email,
         firstName: firstName || '',
         lastName: lastName || '',
         unsubscribed: false,
-        audienceId,
       });
 
       if (error) {
         console.error('Resend Contacts API Error:', error);
-        // If error is "contact already exists", treat as success
+        // If contact already exists, treat as success
         if (error.message && error.message.includes('already exists')) {
           return res.json({ message: 'You are already subscribed!' });
         }
-        return res.status(500).json({ message: 'Failed to subscribe. Please try again.' });
+      } else {
+        console.log('✅ Contact added to Resend Audience:', data);
       }
-
-      console.log('✅ Contact added to Resend Audience:', data);
-    } else {
-      console.warn('⚠️  RESEND_AUDIENCE_ID not set. Skipping Audience registration.');
+    } catch (contactErr) {
+      console.warn('⚠️ Could not add contact to Resend Audience:', contactErr.message);
     }
 
     // Send a beautiful confirmation email
